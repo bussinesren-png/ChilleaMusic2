@@ -40,7 +40,7 @@ const client = new Client({
 const activePlayers = new Map(); 
 const mode247 = new Set();       
 
-// 3. Configuración de DisTube (Con manejo de cookies, ffmpeg y yt-dlp)
+// 3. Configuración de DisTube (Con manejo de cookies, ffmpegPath y yt-dlp)
 const cookiesPath = path.join(__dirname, 'cookies.txt');
 let ytDlpOptions = { update: true };
 
@@ -52,7 +52,7 @@ if (fs.existsSync(cookiesPath)) {
 }
 
 const distube = new DisTube(client, {
-    ffmpegPath: ffmpeg,
+    ffmpegPath: ffmpeg, // <--- ESTO ES LO QUE SOLUCIONA EL ERROR EN RAILWAY
     emitNewSongOnly: false,
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: true,
