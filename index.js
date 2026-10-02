@@ -40,7 +40,7 @@ const client = new Client({
 const activePlayers = new Map(); 
 const mode247 = new Set();       
 
-// 3. Configuración de DisTube (Con manejo de cookies, ffmpegPath y yt-dlp)
+// 3. Configuración de DisTube (Con manejo de cookies y ffmpeg-static forzado)
 const cookiesPath = path.join(__dirname, 'cookies.txt');
 let ytDlpOptions = { update: true };
 
@@ -52,7 +52,7 @@ if (fs.existsSync(cookiesPath)) {
 }
 
 const distube = new DisTube(client, {
-    ffmpegPath: ffmpeg, // <--- ESTO ES LO QUE SOLUCIONA EL ERROR EN RAILWAY
+    ffmpegPath: require('ffmpeg-static'), // Forzado directamente aquí para evitar que busque el comando global
     emitNewSongOnly: false,
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: true,
@@ -285,7 +285,7 @@ client.on('interactionCreate', async interaction => {
             case 'stop':
                 await distube.stop(interaction.guildId);
                 activePlayers.delete(interaction.guildId);
-                await interaction.reply({ content: '⏹️ Reproducción detenida y cola limpiada.', flags: [MessageFlags.Ephemeral] });
+                await interaction.reply({ content: '⏹️️ Reproducción detenida y cola limpiada.', flags: [MessageFlags.Ephemeral] });
                 break;
             case 'previous':
                 try {
