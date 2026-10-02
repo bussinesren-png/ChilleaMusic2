@@ -356,4 +356,4 @@ client.on('messageCreate', async message => {
 if (!tokenToUse) {
     console.error('[ERROR CRÍTICO] No se encontró ningún token de Discord configurado en el archivo config.json ni en el entorno.');
 }
-client.login(tokenToUse);
+client.login(process.env.DISCORD_TOKEN);
