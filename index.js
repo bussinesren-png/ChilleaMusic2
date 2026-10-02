@@ -3,7 +3,9 @@ const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder
 
 // 1. Configuración obligatoria de FFmpeg para Railway y la nube
 const ffmpeg = require('ffmpeg-static');
-process.env.FFMPEG_PATH = ffmpeg;
+// Aseguramos que la ruta se extraiga correctamente como string
+const ffmpegPath = typeof ffmpeg === 'string' ? ffmpeg : ffmpeg.path;
+process.env.FFMPEG_PATH = ffmpegPath;
 
 const { DisTube } = require('distube');
 const { SpotifyPlugin } = require('@distube/spotify');
@@ -52,7 +54,7 @@ if (fs.existsSync(cookiesPath)) {
 }
 
 const distube = new DisTube(client, {
-    ffmpegPath: require('ffmpeg-static'), // Forzado directamente aquí para evitar que busque el comando global
+    ffmpegPath: ffmpegPath, // Ruta absoluta garantizada para evitar errores de ffmpeg no encontrado
     emitNewSongOnly: false,
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: true,
@@ -285,7 +287,7 @@ client.on('interactionCreate', async interaction => {
             case 'stop':
                 await distube.stop(interaction.guildId);
                 activePlayers.delete(interaction.guildId);
-                await interaction.reply({ content: '⏹️️ Reproducción detenida y cola limpiada.', flags: [MessageFlags.Ephemeral] });
+                await interaction.reply({ content: '⏹ Reproducción detenida y cola limpiada.', flags: [MessageFlags.Ephemeral] });
                 break;
             case 'previous':
                 try {
