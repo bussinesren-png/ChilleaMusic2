@@ -1,12 +1,6 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags, PermissionFlagsBits } = require('discord.js');
 
-// 1. Configuración obligatoria de FFmpeg para Railway y la nube
-const ffmpeg = require('ffmpeg-static');
-// Aseguramos que la ruta se extraiga correctamente como string
-const ffmpegPath = typeof ffmpeg === 'string' ? ffmpeg : ffmpeg.path;
-process.env.FFMPEG_PATH = ffmpegPath;
-
 const { DisTube } = require('distube');
 const { SpotifyPlugin } = require('@distube/spotify');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
@@ -28,7 +22,7 @@ if (fs.existsSync(configPath)) {
     }
 }
 
-// 2. Configuración del Cliente de Discord
+// 1. Configuración del Cliente de Discord
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -42,7 +36,7 @@ const client = new Client({
 const activePlayers = new Map(); 
 const mode247 = new Set();       
 
-// 3. Configuración de DisTube (Con manejo de cookies y ffmpeg-static forzado)
+// 2. Configuración de DisTube (FFmpeg se toma nativo del sistema gracias a nixpacks.toml)
 const cookiesPath = path.join(__dirname, 'cookies.txt');
 let ytDlpOptions = { update: true };
 
@@ -54,7 +48,6 @@ if (fs.existsSync(cookiesPath)) {
 }
 
 const distube = new DisTube(client, {
-    ffmpegPath: ffmpegPath, // Ruta absoluta garantizada para evitar errores de ffmpeg no encontrado
     emitNewSongOnly: false,
     emitAddSongWhenCreatingQueue: false,
     emitAddListWhenCreatingQueue: true,
@@ -68,7 +61,7 @@ const distube = new DisTube(client, {
 
 client.commands = new Map();
 
-// 4. Eventos del Bot
+// 3. Eventos del Bot
 client.once('ready', () => {
     console.log(`[BOT] ¡${client.user.tag} está conectado y listo para reproducir!`);
 });
@@ -109,7 +102,7 @@ function getPlayerButtons() {
     );
 }
 
-// 5. Eventos de DisTube
+// 4. Eventos de DisTube
 distube
     .on('playSong', async (queue, song) => {
         if (!queue.textChannel) return;
@@ -214,7 +207,7 @@ distube
         console.error('DisTube Error capturado:', error.message || error);
     });
 
-// 6. Manejador de botones interactivos
+// 5. Manejador de botones interactivos
 client.on('interactionCreate', async interaction => {
     if (!interaction.isButton()) return;
     
@@ -307,7 +300,7 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-// 7. Manejador de comandos de texto
+// 6. Manejador de comandos de texto
 client.on('messageCreate', async message => {
     if (message.author.bot) return;
     
@@ -363,7 +356,7 @@ client.on('messageCreate', async message => {
     }
 });
 
-// 8. Inicio de sesión del Bot
+// 7. Inicio de sesión del Bot
 if (!tokenToUse) {
     console.error('[ERROR CRÍTICO] No se encontró ningún token de Discord configurado en el archivo config.json ni en el entorno.');
 } else {
