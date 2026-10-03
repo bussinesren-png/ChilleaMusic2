@@ -161,7 +161,7 @@ distube
                 .setDescription(`[**${playlist.name}**](${playlist.url || ''})`)
                 .addFields(
                     { name: '🎵 Canciones añadidas', value: `\`${playlist.songs.length}\``, inline: true },
-                    { name: '⏱️ Duración estimada', value: `\`${playlist.formattedDuration || 'Desconocida'}\``, inline: true },
+                    { name: '⏱️️ Duración estimada', value: `\`${playlist.formattedDuration || 'Desconocida'}\``, inline: true },
                     { name: '👤 Añadido por', value: `${playlist.user}`, inline: true }
                 )
                 .setThumbnail(playlist.thumbnail || playlist.songs[0]?.thumbnail)
